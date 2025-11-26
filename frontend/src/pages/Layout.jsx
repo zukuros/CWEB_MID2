@@ -1,34 +1,41 @@
-import { Link } from "react-router-dom"
-import "bootstrap/dist/css/bootstrap.min.css"
-import "../public/stylesheets/style.css"
+import { Link, useLocation } from "react-router-dom";
 
-export default function Layout({ children, isCreateRecipe, isLoginPage }) {
+function Navbar() {
+  const location = useLocation();
+
+  // Determine which page we're on (mimics your isCreateRecipe / isLoginPage)
+  const isCreateRecipePage = location.pathname === "/create-recipe";
+  const isLoginPage = location.pathname === "/login";
+
   return (
-    <>
       <div className="container">
-        <nav className="navbar navbar-light bg-light">
+        <nav className="navbar navbar-light bg-light mb-4">
           <div className="navbar-brand font-weight-bold">RecipeHub</div>
+
           <div className="justify-content-end" id="navbarNav">
             <ul className="navbar-nav d-flex flex-row">
-              {!isCreateRecipe && (
-                <li className="nav-item p-2">
-                  <Link className="btn btn-primary" to="/create-recipe">
-                    Create Recipe
-                  </Link>
-                </li>
+
+              {!isCreateRecipePage && (
+                  <li className="nav-item p-2">
+                    <Link className="btn btn-primary" to="/create-recipe">
+                      Create Recipe
+                    </Link>
+                  </li>
               )}
+
               {!isLoginPage && (
-                <li className="nav-item p-2">
-                  <Link className="btn btn-primary" to="/login">
-                    Login
-                  </Link>
-                </li>
+                  <li className="nav-item p-2">
+                    <Link className="btn btn-primary" to="/login">
+                      Login
+                    </Link>
+                  </li>
               )}
+
             </ul>
           </div>
         </nav>
       </div>
-      {children}
-    </>
-  )
+  );
 }
+
+export default Navbar;

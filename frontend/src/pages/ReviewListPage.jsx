@@ -1,44 +1,55 @@
-"use client"
+import { useEffect, useState } from "react";
+import RecipeCard from "../components/recipes/RecipeCard";
 
-import { useState, useEffect } from "react"
-import { useParams, Link } from "react-router-dom"
+function RecipeListPage() {
+    const [recipes, setRecipes] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-export default function ReviewListPage() {
-  const { recipeId } = useParams()
-  const [reviews, setReviews] = useState([])
+    useEffect(() => {
+        async function loadRecipes() {
+            try {
+                const res = await fetch("http://localhost:4000/api/recipes");
+                const data = await res.json();
 
-  useEffect(() => {
-    fetch(`/api/recipes/${recipeId}/reviews`)
-      .then((res) => res.json())
-      .then((data) => setReviews(data))
-      .catch((err) => console.error(err))
-  }, [recipeId])
+                // Match Handlebars naming (id, title, photoURL_Path)
+                const mapped = data.map((r) => ({
+                    id: r.recipeID,
+                    title: r.recipeTitle,
+                    photoURL_Path: r.photoURL_Path,
+                }));
 
-  return (
-    <div className="container my-5">
-      <h1>Reviews</h1>
+                setRecipes(mapped);
+            } catch (err) {
+                console.error("Failed to load recipes", err);
+            } finally {
+                setLoading(false);
+            }
+        }
 
-      <div className="mb-3">
-        <Link to={`/create-review/${recipeId}`} className="btn btn-primary">
-          Add New Review
-        </Link>
-      </div>
+        loadRecipes();
+    }, []);
 
-      {reviews.length > 0 ? (
-        <ul className="list-group">
-          {reviews.map((review) => (
-            <li key={review.id} className="list-group-item">
-              <h5>
-                {review.title} <small className="text-muted">({review.rating}/10)</small>
-              </h5>
-              <p className="mb-1">{review.feedback}</p>
-              <small className="text-muted">By: {review.nickname}</small>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No reviews yet. Be the first to add one!</p>
-      )}
-    </div>
-  )
+    if (loading) {
+        return (
+            <div className="container text-center mt-5">
+                <p>Loading recipes...</p>
+            </div>
+        );
+    }
+
+    return (
+        <div className="container my-4">
+            <div className="row">
+                {recipes.length > 0 ? (
+                    recipes.map((recipe) => (
+                        <RecipeCard key={recipe.id} recipe={recipe} />
+                    ))
+                ) : (
+                    <p>No recipes found.</p>
+                )}
+            </div>
+        </div>
+    );
 }
+
+export default RecipeListPage;
