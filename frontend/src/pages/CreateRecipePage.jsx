@@ -1,6 +1,6 @@
 // src/pages/CreateRecipePage.jsx
 import { Link, useNavigate } from 'react-router-dom'
-import RecipeForm from '../components/recipes/RecipeForm'
+import RecipeForm from '../components/RecipeForm'
 
 function CreateRecipePage()
 {

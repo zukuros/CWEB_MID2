@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import Navbar from "./components/layout/Navbar";
+import Navbar from "./components/Navbar";
 
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
@@ -19,6 +19,7 @@ function App() {
                 <Route path="/create-recipe" element={<CreateRecipePage />} />
                 <Route path="/create-review/:recipeId" element={<CreateReviewPage />} />
                 <Route path="/recipes/:id" element={<RecipeDetailPage />} />
+                <Route path="/navbaar" element={<Navbar />} />
             </Routes>
         </>
     );
